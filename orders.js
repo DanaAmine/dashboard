@@ -2,19 +2,19 @@ const Orders = [
      {
         productName: 'Amine Brd',
         productNumber: '5',
-        paymentStatus: 'pending',
+        paymentStatus: 'done',
         status: 'active'
     },
     {
         productName: 'Tarek bensaada',
         productNumber: '1',
-        paymentStatus: 'done',
+        paymentStatus: 'pending',
         status: 'active'
     },
     {
         productName: 'chaima analyse',
         productNumber: '1',
-        paymentStatus: 'done',
+        paymentStatus: 'pending',
         status: 'active'
     },
 ]
