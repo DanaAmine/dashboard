@@ -1,18 +1,18 @@
-const Orders = [
-    {
-        productName: 'Amine Brd',
-        productNumber: '200',
-        paymentStatus: 'done',
-        status: 'active'
-    },
-    {
+const Orders = [ 
+     {
         productName: 'Dana Amine',
-        productNumber: '400',
+        productNumber: '40',
         paymentStatus: 'pending',
         status: 'inActive'
     },
     {
-        productName: ' Mohamed Amine',
+        productName: 'Amine Brd',
+        productNumber: '20',
+        paymentStatus: 'done',
+        status: 'active'
+    },
+    {
+        productName: 'chaima analyse',
         productNumber: '100',
         paymentStatus: 'done',
         status: 'Pending'
