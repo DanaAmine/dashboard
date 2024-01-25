@@ -17,8 +17,9 @@ darkMode.addEventListener('click', () => {
     darkMode.querySelector('span:nth-child(1)').classList.toggle('active');
     darkMode.querySelector('span:nth-child(2)').classList.toggle('active');
 })
-
-
+Orders.sort(function(a, b) {
+    return b.productNumber - a.productNumber;
+  });
 Orders.forEach(order => {
     const tr = document.createElement('tr');
     const trContent = `
