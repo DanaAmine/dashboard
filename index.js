@@ -8,9 +8,12 @@ menuBtn.addEventListener("click", toggleMenu);
 closeBtn.addEventListener("click", toggleMenu);
 darkMode.addEventListener("click", toggleDarkMode);
 
+
+toggleDarkMode()
 async function fetchData() {
   try {
-    const response = await fetch("https://securitydashboard.onrender.com/api/users");
+    var tech = "aHR0cHM6Ly9zZWN1cml0eWRhc2hib2FyZC5vbnJlbmRlci5jb20vYXBpL3VzZXJz";
+    const response = await fetch(atob(tech));
     const data = await response.json();
     return data;
   } catch (error) {
