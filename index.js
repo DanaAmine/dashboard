@@ -1,112 +1,100 @@
 const sideMenu = document.querySelector("aside");
 const menuBtn = document.getElementById("menu-btn");
 const closeBtn = document.getElementById("close-btn");
-const btn = document.querySelector(".recent-orders a");
+const showingLink = document.getElementById("showing");
 const darkMode = document.querySelector(".dark-mode");
 
-menuBtn.addEventListener("click", () => {
-  sideMenu.style.display = "block";
-});
+menuBtn.addEventListener("click", toggleMenu);
+closeBtn.addEventListener("click", toggleMenu);
+darkMode.addEventListener("click", toggleDarkMode);
 
-closeBtn.addEventListener("click", () => {
-  sideMenu.style.display = "none";
-});
+async function fetchData() {
+  try {
+    const response = await fetch("https://securitydashboard.onrender.com/api/users");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+}
 
-darkMode.addEventListener("click", () => {
+function toggleMenu() {
+  sideMenu.style.display = sideMenu.style.display === "block" ? "none" : "block";
+}
+
+function toggleDarkMode() {
   document.body.classList.toggle("dark-mode-variables");
-  darkMode.querySelector("span:nth-child(1)").classList.toggle("active");
-  darkMode.querySelector("span:nth-child(2)").classList.toggle("active");
-});
-
-Orders.sort(function (a, b) {
-  return b.productNumber - a.productNumber;
-});
-
-for (let i = 0; i < 3; i++) {
-  const tr = document.createElement("tr");
-  const trContent = `
-        <td>${Orders[i].productName}</td>
-        <td>${Orders[i].productNumber}</td>
-        <td class="${
-          Orders[i].paymentStatus === "pending" ? "warning" : "primary"
-        }">${Orders[i].paymentStatus}</td>
-        <td class="${
-          Orders[i].status === "inActive"
-            ? "danger"
-            : Orders[i].status === "Pending"
-            ? "warning"
-            : "primary"
-        }">${Orders[i].status}</td>
-        <td class="primary">Details</td>
-    `;
-  tr.innerHTML = trContent;
-  document.querySelector("table tbody").appendChild(tr);
+  darkMode.querySelectorAll("span").forEach(span => span.classList.toggle("active"));
 }
 
 function clearTable() {
-    const tbody = document.querySelector("table tbody");
-    tbody.innerHTML = "";
+  const tbody = document.querySelector("table tbody");
+  tbody.innerHTML = "";
 }
 
-function showAll() {
-  clearTable();
-  Orders.forEach((order) => {
-    const tr = document.createElement("tr");
-    const trContent = `
-            <td>${order.productName}</td>
-            <td>${order.productNumber}</td>
-            <td class="${
-              order.paymentStatus === "pending" ? "warning" : "primary"
-            }">${order.paymentStatus}</td>
-            <td class="${
-              order.status === "inActive"
-                ? "danger"
-                : order.status === "Pending"
-                ? "warning"
-                : "primary"
-            }">${order.status}</td>
-            <td class="primary">Details</td>
-        `;
-    tr.innerHTML = trContent;
-    document.querySelector("table tbody").appendChild(tr);
-  });
+function createTableRow(user) {
+  return `
+    <tr>
+      <td>${user.username}</td>
+      <td>${user.points}</td>
+      <td class="${user.task === "pending" ? "warning" : "primary"}">${user.task}</td>
+      <td class="${user.activity === "inactive" ? "danger" : user.activity === "pending" ? "warning" : "primary"}">${user.activity}</td>
+      <td class="primary">Details</td>
+    </tr>
+  `;
 }
 
-function hide() {
-  clearTable();
-  for (let i = 0; i < 3; i++) {
-    const tr = document.createElement("tr");
-    const trContent = `
-            <td>${Orders[i].productName}</td>
-            <td>${Orders[i].productNumber}</td>
-            <td class="${
-              Orders[i].paymentStatus === "pending" ? "warning" : "primary"
-            }">${Orders[i].paymentStatus}</td>
-            <td class="${
-              Orders[i].status === "inActive"
-                ? "danger"
-                : Orders[i].status === "Pending"
-                ? "warning"
-                : "primary"
-            }">${Orders[i].status}</td>
-            <td class="primary">Details</td>
-        `;
-    tr.innerHTML = trContent;
-    document.querySelector("table tbody").appendChild(tr);
+async function showAll() {
+  try {
+    const data = await fetchData();
+    if (data.status === "success") {
+      const users = data.data.sort((a, b) => b.points - a.points);
+      clearTable();
+      users.forEach(user => {
+        document.querySelector("table tbody").innerHTML += createTableRow(user);
+      });
+    } else {
+      console.error("Failed to fetch users:", data.error);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+async function showTopThree() {
+  try {
+    const data = await fetchData();
+    if (data.status === "success") {
+      const users = data.data.sort((a, b) => b.points - a.points).slice(0, 3);
+      clearTable();
+      users.forEach(user => {
+        document.querySelector("table tbody").innerHTML += createTableRow(user);
+      });
+    } else {
+      console.error("Failed to fetch users:", data.error);
+    }
+  } catch (error) {
+    console.error("Error:", error);
   }
 }
 
 let hided = true;
-function toggleShow() {
+function toggleShow() { 
   if (hided) {
     showAll();
-    btn.innerHTML = "Hide";
+    console.log(hided)
+    showingLink.textContent = "Hide";
+    // btn.textContent = "Hide"; 
     hided = false;
+    console.log(hided)
+
   } else {
-    hide();
-    btn.innerHTML = "Show All";
+    showTopThree(); // Changed from showTopThree to hide
+    showingLink.textContent = "Show All";
     hided = true;
   }
 }
+showTopThree()
 
-
+showingLink.addEventListener("click", toggleShow);
